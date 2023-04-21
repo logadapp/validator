@@ -1,0 +1,19 @@
+{
+  "name": "logadapp/validator",
+  "description": "Request Validation library",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Michael Arawole",
+      "email": "michael@logad.net"
+    }
+  ],
+  "require": {
+  },
+  "autoload": {
+        "psr-4": {
+            "Logadapp\\Validator\\": "src/"
+        }
+    }
+}
