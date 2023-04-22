@@ -10,12 +10,11 @@ namespace Logadapp\Validator;
 
 use Exception;
 
-class Validation
+final class Validation
 {
     public array $postData;
     public array $files;
     public array $rules;
-
     private array $errors = [];
 
     public function getErrors(): array
