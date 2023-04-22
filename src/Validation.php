@@ -52,7 +52,6 @@ final class Validation
             }
 
             $ruleSets = explode('|', $ruleset);
-            print_r($ruleSets);
             foreach ($ruleSets as $rule) {
                 $this->validateRule($rule, $fieldName, $this->postData[$fieldName], $this->files[$fieldName] ?? []);
             }
@@ -90,12 +89,12 @@ final class Validation
         }
     }
 
-    protected function validateRequired(string $field, string $value)
+    private function validateRequired(string $field, string $value)
     {
         return !empty($value);
     }
 
-    protected function validateMax(string $field, string|array $value, array $file, array $params): bool
+    private function validateMax(string $field, string|array $value, array $file, array $params): bool
     {
         $maxSize = (int) $params[0];
 
@@ -114,22 +113,22 @@ final class Validation
         return false;
     }
 
-    protected function validateEmail(string $value): bool
+    private function validateEmail(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
     }
 
-    protected function validateNumeric(mixed $value): bool
+    private function validateNumeric(mixed $value): bool
     {
         return is_numeric($value);
     }
 
-    protected function validateMin($value, $params): bool
+    private function validateMin($value, $params): bool
     {
         return strlen($value) >= $params[0];
     }
 
-    protected function validateMimes($field, $value, $file, $params):bool
+    private function validateMimes($field, $value, $file, $params):bool
     {
         $allowedMimes = $params;
 
@@ -137,7 +136,7 @@ final class Validation
             $mime = $file['type'];
 
             foreach ($allowedMimes as $allowedMime) {
-                if (strpos($mime, $allowedMime) === 0) {
+                if (str_starts_with($mime, $allowedMime)) {
                     return true;
                 }
             }
