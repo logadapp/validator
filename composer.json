@@ -11,9 +11,14 @@
   ],
   "require": {
   },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "phpunit/phpunit": "^9.5",
+    "phpmd/phpmd": "^2.13"
+  },
   "autoload": {
-        "psr-4": {
-            "Logadapp\\Validator\\": "src/"
-        }
+    "psr-4": {
+      "LogadApp\\Validator\\": "src/"
     }
+  }
 }
