@@ -19,4 +19,8 @@ $validator->make($_POST, $_FILES, $rules);
 
 $validator->validate();
 
+echo 'Errors', PHP_EOL;
 print_r($validator->getErrors());
+
+echo 'First Error', PHP_EOL;
+print_r($validator->getFirstError());
