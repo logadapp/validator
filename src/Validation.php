@@ -1,10 +1,12 @@
 <?php
-// +------------------------------------------------------------------------+
-// | @author        : Michael Arawole (Logad Networks)
-// | @author_url    : https://www.logad.net
-// | @author_email  : logadscripts@gmail.com
-// | @date          : 20 Apr, 2023 8:30 AM
-// +------------------------------------------------------------------------+
+/**
+ * Validation class
+ * @package validation
+ * @version 1.0.0
+ * @author Michael Arawole <michael@loogad,net>
+ * @link https://www.logad.net
+ * @date 20 Apr, 2023 8:30 AM
+ */
 
 namespace Logadapp\Validator;
 
@@ -24,7 +26,7 @@ final class Validation
 
     public function getFirstError(): string
     {
-        return $this->errors[0];
+        return $this->errors[0] ?? '';
     }
 
     public function make(array $post, array $files, array $rules):self
@@ -47,7 +49,7 @@ final class Validation
 
         foreach ($this->rules as $fieldName => $ruleset) {
             if (empty($this->postData[$fieldName])) {
-                $this->errors[$fieldName][] = 'required';
+                $this->errors[] = $fieldName . ' is required';
                 continue;
             }
 
@@ -81,60 +83,100 @@ final class Validation
         }
 
         if (is_callable($callback)) {
-            if (call_user_func($callback, $field, $value, $file, $params) === false) {
-                $this->errors[$field][] = $rule;
+            $validateResult = call_user_func($callback, $field, $value, $file, $params);
+            if (!$validateResult['status']) {
+                $this->errors[] = $validateResult['message'];
             }
         } else {
             throw new Exception("Validation rule not found: $rule");
         }
     }
 
-    private function validateRequired(string $field, string $value)
+    private function validateRequired(string $field, string $value): array
     {
-        return !empty($value);
+        return [
+            'status' => !empty($value),
+            'message' => $field . ' - is required'
+        ];
     }
 
-    private function validateMax(string $field, string|array $value, array $file, array $params): bool
+    private function validateMin(string $field, int $value, array $file, array $params): array
+    {
+        return [
+            'status' => $value >= $params[0],
+            'message' => $field . ' - Min value must be '.$params[0]
+        ];
+    }
+
+    private function validateMax(string $field, int $value, array $file, array $params): array
+    {
+        return [
+            'status' => $value <= $params[0],
+            'message' => $field . ' - Max value must be '.$params[0]
+        ];
+    }
+
+    private function validateMinLength(string $field, string $value, array $file, array $params): array
+    {
+        return [
+            'status' => strlen($value) >= $params[0],
+            'message' => $field . ' - Min length must be '.$params[0]
+        ];
+    }
+
+    private function validateMaxLength(string $field, string $value, array $file, array $params): array
+    {
+        return [
+            'status' => strlen($value) <= $params[0],
+            'message' => $field . ' - Max length must be '.$params[0]
+        ];
+    }
+
+    private function validateMaxSize(string $field, string|array $value, array $file, array $params): array
     {
         $maxSize = (int) $params[0];
+        $status = false;
 
         if (isset($file['size'])) {
-            return $file['size'] <= $maxSize;
+            $status = $file['size'] <= $maxSize;
         }
 
         if (is_string($value)) {
-            return strlen($value) <= $maxSize;
+            $status = strlen($value) <= $maxSize;
         }
 
         if (is_array($value)) {
-            return count($value) <= $maxSize;
+            $status = count($value) <= $maxSize;
         }
 
-        return false;
+        return [
+            'status' => $status,
+            'message' => $field . ' - Max values is ' . $maxSize
+        ];
     }
 
-    private function validateEmail(string $value): bool
+    private function validateEmail(string $field, string $value): array
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) !== false;
+        return [
+            'status' => (filter_var($value, FILTER_VALIDATE_EMAIL) !== false),
+            'message' => $field. ' - Invalid email format'
+        ];
     }
 
-    private function validateNumeric(mixed $value): bool
+    private function validateNumeric(string $field, mixed $value): array
     {
-        return is_numeric($value);
+        return [
+            'status' => is_numeric($value),
+            'message' => $field . ' -  is not numeric'
+        ];
     }
 
-    private function validateMin($value, $params): bool
-    {
-        return strlen($value) >= $params[0];
-    }
-
-    private function validateMimes($field, $value, $file, $params):bool
+    private function validateMimes(string $field, mixed $value, array $file, array $params):bool
     {
         $allowedMimes = $params;
 
         if (isset($file['type'])) {
             $mime = $file['type'];
-
             foreach ($allowedMimes as $allowedMime) {
                 if (str_starts_with($mime, $allowedMime)) {
                     return true;
