@@ -10,10 +10,11 @@ use LogadApp\Validator\Validation;
 
 require 'vendor/autoload.php';
 
-
 $validator = new Validation;
 $rules = [
-    'test' => 'required|numeric|max:10',
+    'test' => 'required|numeric|max:10|min:5',
+    'text' => 'required|maxLength:5',
+    'email' => 'required|email'
 ];
 $validator->make($_POST, $_FILES, $rules);
 
