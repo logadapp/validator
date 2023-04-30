@@ -42,7 +42,7 @@ final class Validation
      */
     public function validate(array $post = [], array $files = [], array $rules = []): self
     {
-        // Make method has not already been used
+        // `make` method has not already been used
         if (isset($rules) && !isset($this->rules)) {
             $this->make($post, $files, $rules);
         }
@@ -69,13 +69,16 @@ final class Validation
         $params = [];
         $callback = null;
 
+        echo $field . ' -- ' . $rule, PHP_EOL;
+        echo PHP_EOL;
         if (str_contains($rule, ':')) {
             list($rule, $params) = explode(':', $rule, 2);
             $params = explode(',', $params);
         }
 
         $methodName = 'validate' . ucfirst($rule);
-        echo $methodName, PHP_EOL;
+        // echo $methodName, PHP_EOL;
+
         if (method_exists($this, $methodName)) {
             $callback = [$this, $methodName];
         } elseif (function_exists($methodName)) {
@@ -168,6 +171,30 @@ final class Validation
         return [
             'status' => is_numeric($value),
             'message' => $field . ' -  is not numeric'
+        ];
+    }
+
+    private function validateIn(string $field, mixed $value, array $file, array $params): array
+    {
+        return [
+            'status' => in_array($value, $params),
+            'message' => $field . ' -  is not in ' . implode(',', $params)
+        ];
+    }
+
+    private function validateRequiredIf(string $field, mixed $value, array $file, array $params): array
+    {
+        $requiredField = $params[0];
+        $requiredValue = $params[1];
+        $status = false;
+
+        if (isset($this->postData[$requiredField])) {
+            $status = $this->postData[$requiredField] === $requiredValue;
+        }
+
+        return [
+            'status' => $status,
+            'message' => $field . ' -  is required'
         ];
     }
 
