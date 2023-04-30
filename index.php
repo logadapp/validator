@@ -13,8 +13,10 @@ require 'vendor/autoload.php';
 $validator = new Validation;
 $rules = [
     'test' => 'required|numeric|max:10|min:5',
-    'text' => 'required|maxLength:5',
-    'email' => 'required|email'
+    'text' => 'required|maxLength:5|minLength:3',
+    'email' => 'required|email',
+    'type' => 'required|in:user,admin',
+    'name' => 'required_if:type,user'
 ];
 $validator->make($_POST, $_FILES, $rules);
 
