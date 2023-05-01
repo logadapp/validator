@@ -178,23 +178,7 @@ final class Validation
     {
         return [
             'status' => in_array($value, $params),
-            'message' => $field . ' -  is not in ' . implode(',', $params)
-        ];
-    }
-
-    private function validateRequiredIf(string $field, mixed $value, array $file, array $params): array
-    {
-        $requiredField = $params[0];
-        $requiredValue = $params[1];
-        $status = false;
-
-        if (isset($this->postData[$requiredField])) {
-            $status = $this->postData[$requiredField] === $requiredValue;
-        }
-
-        return [
-            'status' => $status,
-            'message' => $field . ' -  is required'
+            'message' => $field . ' -  is not between ' . implode(', ', $params)
         ];
     }
 
