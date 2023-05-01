@@ -48,10 +48,10 @@ final class Validation
         }
 
         foreach ($this->rules as $fieldName => $ruleset) {
-            if (empty($this->postData[$fieldName])) {
+            /*if (empty($this->postData[$fieldName])) {
                 $this->errors[] = $fieldName . ' is required';
                 continue;
-            }
+            }*/
 
             $ruleSets = explode('|', $ruleset);
             foreach ($ruleSets as $rule) {
@@ -69,15 +69,18 @@ final class Validation
         $params = [];
         $callback = null;
 
-        echo $field . ' -- ' . $rule, PHP_EOL;
-        echo PHP_EOL;
         if (str_contains($rule, ':')) {
             list($rule, $params) = explode(':', $rule, 2);
             $params = explode(',', $params);
         }
 
-        $methodName = 'validate' . ucfirst($rule);
-        // echo $methodName, PHP_EOL;
+        $methodName = 'validate' . ucfirst(
+            str_replace('_', '', $rule) // Allows for underscores (`max_length` or `maxLength`)
+        );
+
+        echo $field . ' -- ' . $rule, PHP_EOL;
+        echo $methodName, PHP_EOL;
+        echo PHP_EOL;
 
         if (method_exists($this, $methodName)) {
             $callback = [$this, $methodName];
@@ -100,6 +103,21 @@ final class Validation
         return [
             'status' => !empty($value),
             'message' => $field . ' - is required'
+        ];
+    }
+
+    private function validateRequiredIf(string $field, mixed $value, array $file, array $params): array
+    {
+        $requiredField = $params[0];
+        $status = false;
+
+        if (isset($this->postData[$requiredField])) {
+            $status = in_array($this->postData[$requiredField], array_slice($params, 1));
+        }
+
+        return [
+            'status' => !($status && empty($value)),
+            'message' => $field . ' -  is required'
         ];
     }
 
