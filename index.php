@@ -16,7 +16,8 @@ $rules = [
     'text' => 'required|maxLength:5|minLength:3',
     'email' => 'required|email',
     'type' => 'required|in:user,admin',
-    'name' => 'required_if:type,user'
+    'name' => 'requiredIf:type,user,admin',
+    'profilePic' => 'file|requiredIf:type,user,admin|fileSize:1000000|fileType:jpg,png,jpeg',
 ];
 $validator->make($_POST, $_FILES, $rules);
 
