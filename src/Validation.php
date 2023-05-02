@@ -55,7 +55,7 @@ final class Validation
 
             $ruleSets = explode('|', $ruleset);
             foreach ($ruleSets as $rule) {
-                $this->validateRule($rule, $fieldName, $this->postData[$fieldName], $this->files[$fieldName] ?? []);
+                $this->validateRule($rule, $fieldName, $this->postData[$fieldName]??'', $this->files[$fieldName]??[]);
             }
         }
         return $this;
@@ -94,7 +94,8 @@ final class Validation
                 $this->errors[] = $validateResult['message'];
             }
         } else {
-            throw new Exception("Validation rule not found: $rule");
+            // log error
+            // throw new Exception("Validation rule not found: $rule");
         }
     }
 
@@ -200,19 +201,49 @@ final class Validation
         ];
     }
 
-    private function validateMimes(string $field, mixed $value, array $file, array $params):bool
+    private function validateFile(string $field, mixed $value, array $file, array $params): array
+    {
+        return [
+            'status' => !empty($file['name']),
+            'message' => $field . ' -  is not a file'
+        ];
+    }
+
+    private function validateFileSize(string $field, mixed $value, array $file, array $params): array
+    {
+        $maxSize = (int) $params[0];
+        $status = false;
+
+        if (isset($file['size'])) {
+            $status = $file['size'] <= $maxSize;
+        }
+
+        return [
+            'status' => $status,
+            'message' => $field . ' - Max file size is ' . $maxSize
+        ];
+    }
+
+    private function validateFileType(string $field, mixed $value, array $file, array $params): array
     {
         $allowedMimes = $params;
-
+        print_r($allowedMimes);
+        echo 'File';
+        print_r($file);
+        $status = false;
+        
         if (isset($file['type'])) {
             $mime = $file['type'];
             foreach ($allowedMimes as $allowedMime) {
                 if (str_starts_with($mime, $allowedMime)) {
-                    return true;
+                    $status = true;
                 }
             }
         }
 
-        return false;
+        return [
+            'status' => $status,
+            'message' => $field . ' - Allowed file types are: ' . implode(', ', $allowedMimes)
+        ];
     }
 }
