@@ -23,11 +23,25 @@ $rules = [
 $validator->make($_POST, $_FILES, $rules);
 
 try {
-    $validator->validate();
-    echo 'Errors', PHP_EOL;
-    print_r($validator->getErrors());
 
-    echo 'First Error', PHP_EOL;
-    print_r($validator->getFirstError());
+    $validator->validate();
+
+    echo 'Is valid?', PHP_EOL;
+    var_dump($validator->isValid());
+    echo PHP_EOL;
+
+    echo 'Get all errors', PHP_EOL;
+    print_r($validator->getErrors());
+    echo PHP_EOL;
+
+    echo 'Invalid fields', PHP_EOL;
+    print_r($validator->getInvalidFields());
+    echo PHP_EOL;
+
+    echo 'Error Messages', PHP_EOL;
+    print_r($validator->getErrorMessages());
+
+    echo 'First Error Message', PHP_EOL;
+    print_r($validator->getFirstErrorMessage());
 } catch (Exception $e) {
 }
