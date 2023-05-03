@@ -18,22 +18,26 @@ final class Validation
     public array $files;
     public array $rules;
     private array $errors = [];
-
-    private array $errorArray = [];
+    private array $errorMessages = [];
 
     public function getErrors(): array
     {
         return $this->errors;
     }
 
-    public function getFirstError(): string
+    public function getErrorMessages(): array
     {
-        return $this->errors[0] ?? '';
+        return $this->errorMessages;
+    }
+
+    public function getFirstErrorMessage(): string
+    {
+        return $this->errorMessages[0] ?? '';
     }
 
     public function getInvalidFields(): array
     {
-        return array_keys($this->errorArray);
+        return array_keys($this->errors);
     }
 
     public function isValid(): bool
@@ -98,8 +102,8 @@ final class Validation
         if (is_callable($callback)) {
             $validateResult = call_user_func($callback, $field, $value, $file, $params);
             if (!$validateResult['status']) {
-                $this->errors[] = $validateResult['message'];
-                $this->errorArray[$field] = $validateResult['message'];
+                $this->errorMessages[] = $validateResult['message'];
+                $this->errors[$field] = $validateResult['message'];
             }
         } else {
             // log error
