@@ -19,6 +19,8 @@ final class Validation
     public array $rules;
     private array $errors = [];
 
+    private array $errorArray = [];
+
     public function getErrors(): array
     {
         return $this->errors;
@@ -27,6 +29,16 @@ final class Validation
     public function getFirstError(): string
     {
         return $this->errors[0] ?? '';
+    }
+
+    public function getInvalidFields(): array
+    {
+        return array_keys($this->errorArray);
+    }
+
+    public function isValid(): bool
+    {
+        return empty($this->errors);
     }
 
     public function make(array $post, array $files, array $rules):self
@@ -48,11 +60,6 @@ final class Validation
         }
 
         foreach ($this->rules as $fieldName => $ruleset) {
-            /*if (empty($this->postData[$fieldName])) {
-                $this->errors[] = $fieldName . ' is required';
-                continue;
-            }*/
-
             $ruleSets = explode('|', $ruleset);
             foreach ($ruleSets as $rule) {
                 $this->validateRule($rule, $fieldName, $this->postData[$fieldName]??'', $this->files[$fieldName]??[]);
@@ -92,6 +99,7 @@ final class Validation
             $validateResult = call_user_func($callback, $field, $value, $file, $params);
             if (!$validateResult['status']) {
                 $this->errors[] = $validateResult['message'];
+                $this->errorArray[$field] = $validateResult['message'];
             }
         } else {
             // log error
