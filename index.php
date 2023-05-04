@@ -44,4 +44,5 @@ try {
     echo 'First Error Message', PHP_EOL;
     print_r($validator->getFirstErrorMessage());
 } catch (Exception $e) {
+    echo $e->getMessage();
 }
