@@ -79,7 +79,7 @@ final class Validation
     /**
      * @throws Exception
      */
-    private function validateRule(string $rule, string $field, mixed $value, mixed $file): void
+    private function validateRule(string $rule, string $field, mixed $value, array $file): void
     {
         $params = [];
         $callback = null;
@@ -89,7 +89,7 @@ final class Validation
             $params = explode(',', $params);
         }
 
-        $methodName = 'validate' . ucfirst(
+        $methodName = ucfirst(
             str_replace('_', '', $rule) // Allows for underscores (`max_length` or `maxLength`)
         );
 
@@ -97,17 +97,27 @@ final class Validation
         echo $methodName, PHP_EOL;
         echo PHP_EOL;
 
-        $ruleClass = new Rule($this->postData, $this->files);
-        $callback = [$ruleClass, $methodName];
-        print_r($callback);
-        if (is_callable($callback)) {
-            $validateResult = call_user_func($callback, $field, $value, $file, $params);
-            if (!$validateResult['status']) {
-                $this->errorMessages[] = $validateResult['message'];
-                $this->errors[$field] = $validateResult['message'];
+        /**
+         * Rules are separated into different classes with the namespace
+         * `LogadApp\Validator\Rules` and the class name is the rule name
+        */
+
+        $className = 'LogadApp\Validator\Rules\\' . $methodName;
+        if (class_exists($className)) {
+            $ruleClass = new $className($this->postData, $this->files);
+            $callback = [$ruleClass, 'validate'];
+
+            if (is_callable($callback)) {
+                $validateResult = call_user_func($callback, $field, $value, $file, $params);
+                if (!$validateResult['status']) {
+                    $this->errorMessages[] = $validateResult['message'];
+                    $this->errors[$field] = $validateResult['message'];
+                }
+            } else {
+                // log error
+                throw new Exception("Validate method couldn't be called for rule $rule");
             }
         } else {
-            // log error
             throw new Exception("Validation rule not found: $rule");
         }
     }
