@@ -24,31 +24,65 @@ final class Validation
 
     private array $errorMessages = [];
 
+    /**
+     * Get the validation errors
+     *
+     * @return array The validation errors
+     */
     public function getErrors(): array
     {
         return $this->errors;
     }
 
+    /**
+     * Get the validation error messages
+     *
+     * @return array The validation error messages
+     */
     public function getErrorMessages(): array
     {
         return $this->errorMessages;
     }
 
+    /**
+     * Get the first validation error message
+     *
+     * @return string The first validation error message
+     */
     public function getFirstErrorMessage(): string
     {
         return $this->errorMessages[0] ?? '';
     }
 
+    /**
+     * Get the fields that failed validation
+     *
+     * @return array The fields that failed validation
+     */
     public function getInvalidFields(): array
     {
         return array_keys($this->errors);
     }
 
+    /**
+     * Check if the validation passed
+     *
+     * @return bool Returns true if validation passed, false otherwise
+     */
     public function isValid(): bool
     {
         return empty($this->errors);
     }
 
+    /**
+     * Set the post data, files and validation rules
+     *
+     * @param array $post The post data to be validated
+     * @param array $files The files to be validated
+     * @param array $rules The validation rules
+     *
+     * @return self
+     */
     public function make(array $post, array $files, array $rules):self
     {
         $this->postData = $post;
@@ -58,7 +92,15 @@ final class Validation
     }
 
     /**
+     * Validate the post data and files against the validation rules
+     *
+     * @param array $post The post data to be validated
+     * @param array $files The files to be validated
+     * @param array $rules The validation rules
+     *
      * @throws Exception
+     *
+     * @return self
      */
     public function validate(array $post = [], array $files = [], array $rules = []): self
     {
@@ -77,12 +119,18 @@ final class Validation
     }
 
     /**
-     * @throws Exception
+     * Validates a single rule for a given field value.
+     *
+     * @param string $rule The name of the rule to validate.
+     * @param string $field The name of the field being validated.
+     * @param mixed $value The value of the field being validated.
+     * @param array $file An array containing file information for file uploads.
+     * @throws Exception If the validation rule class or its `validate` method could not be found.
+     * @return void
      */
     private function validateRule(string $rule, string $field, mixed $value, array $file): void
     {
         $params = [];
-        $callback = null;
 
         if (str_contains($rule, ':')) {
             list($rule, $params) = explode(':', $rule, 2);
@@ -93,9 +141,9 @@ final class Validation
             str_replace('_', '', $rule) // Allows for underscores (`max_length` or `maxLength`)
         );
 
-        echo $field . ' -- ' . $rule, PHP_EOL;
+       /* echo $field . ' -- ' . $rule, PHP_EOL;
         echo $methodName, PHP_EOL;
-        echo PHP_EOL;
+        echo PHP_EOL;*/
 
         /**
          * Rules are separated into different classes with the namespace
