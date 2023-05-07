@@ -20,13 +20,14 @@ final class RequiredIf extends Rule
         $requiredField = $params[0];
         $status = false;
 
+
         if (isset($this->postData[$requiredField])) {
             $status = in_array($this->postData[$requiredField], array_slice($params, 1));
         }
 
         return [
-            'status' => !($status && empty($value)),
-            'message' => $field . ' -  is required'
+            'status' => !($status && (empty($file['name']) && empty($value))),
+            'message' => 'is required'
         ];
     }
 }

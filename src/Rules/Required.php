@@ -18,8 +18,8 @@ final class Required extends Rule
     public function validate(string $field, string $value): array
     {
         return [
-            'status' => !empty($value),
-            'message' => $field . ' - is required'
+            'status' => !(empty($file['name']) && empty($value)),
+            'message' => 'is required'
         ];
     }
 }
