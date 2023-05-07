@@ -125,6 +125,7 @@ final class Validation
      * @param string $field The name of the field being validated.
      * @param mixed $value The value of the field being validated.
      * @param array $file An array containing file information for file uploads.
+     *
      * @throws Exception If the validation rule class or its `validate` method could not be found.
      * @return void
      */
@@ -158,8 +159,7 @@ final class Validation
             if (is_callable($callback)) {
                 $validateResult = call_user_func($callback, $field, $value, $file, $params);
                 if (!$validateResult['status']) {
-                    $this->errorMessages[] = $validateResult['message'];
-                    $this->errors[$field] = $validateResult['message'];
+                    $this->addError($field, $validateResult['message']);
                 }
             } else {
                 // log error
@@ -168,5 +168,11 @@ final class Validation
         } else {
             throw new Exception("Validation rule not found: $rule");
         }
+    }
+
+    private function addError(string $field, mixed $message): void
+    {
+        $this->errorMessages[] = $message;
+        $this->errors[$field] = $message;
     }
 }
