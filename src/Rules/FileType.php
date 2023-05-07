@@ -15,26 +15,34 @@ use LogadApp\Validator\Rule;
 
 final class FileType extends Rule
 {
+
+    /**
+     * Validate file mime type
+     * This only checks the file extension. Consider using mime_content_type() for more accurate validation
+     *
+     * @param string $field
+     * @param mixed $value
+     * @param array $file
+     * @param array $params
+     * @return array
+     */
     public function validate(string $field, mixed $value, array $file, array $params): array
     {
-        $allowedMimes = $params;
-        print_r($allowedMimes);
-        echo 'File';
+        /*echo 'File '. $field;
         print_r($file);
+        echo PHP_EOL;*/
         $status = false;
+        $allowedTypes = $params;
 
         if (isset($file['type'])) {
-            $mime = $file['type'];
-            foreach ($allowedMimes as $allowedMime) {
-                if (str_starts_with($mime, $allowedMime)) {
-                    $status = true;
-                }
-            }
+            // $extension = mime_content_type($file['tmp_name']);
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $status = in_array($extension, $allowedTypes);
         }
 
         return [
             'status' => $status,
-            'message' => $field . ' - Allowed file types are: ' . implode(', ', $allowedMimes)
+            'message' => 'Allowed file types are: ' . implode(', ', $allowedTypes)
         ];
     }
 }
