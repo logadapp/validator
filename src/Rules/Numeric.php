@@ -20,7 +20,7 @@ final class Numeric extends Rule
     {
         return [
             'status' => is_numeric($value),
-            'message' => $field . ' -  is not numeric'
+            'message' => 'is not numeric'
         ];
     }
 }

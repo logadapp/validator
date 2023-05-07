@@ -19,7 +19,7 @@ final class Min extends Rule
     {
         return [
             'status' => $value >= $params[0],
-            'message' => $field . ' - Min value must be '.$params[0]
+            'message' => 'Min value must be '.$params[0]
         ];
     }
 }

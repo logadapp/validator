@@ -19,7 +19,7 @@ final class In extends Rule
     {
         return [
             'status' => in_array($value, $params),
-            'message' => $field . ' -  is not between ' . implode(', ', $params)
+            'message' => 'is not between ' . implode(', ', $params)
         ];
     }
 }

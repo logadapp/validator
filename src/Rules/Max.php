@@ -19,7 +19,7 @@ final class Max extends Rule
     {
         return [
             'status' => $value <= $params[0],
-            'message' => $field . ' - Max value must be '.$params[0]
+            'message' => 'Max value must be '.$params[0]
         ];
     }
 }

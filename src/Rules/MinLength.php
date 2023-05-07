@@ -19,7 +19,7 @@ final class MinLength extends Rule
     {
         return [
             'status' => strlen($value) >= $params[0],
-            'message' => $field . ' - Min length must be '.$params[0]
+            'message' => 'Min length must be '.$params[0]
         ];
     }
 }

@@ -20,7 +20,7 @@ final class Email extends Rule
     {
         return [
             'status' => (filter_var($value, FILTER_VALIDATE_EMAIL) !== false),
-            'message' => $field. ' - Invalid email format'
+            'message' => 'Invalid email format'
         ];
     }
 }
