@@ -26,7 +26,7 @@ final class FileSize extends Rule
 
         return [
             'status' => $status,
-            'message' => 'Max file size is ' . $maxSize
+            'message' => 'Max file size is ' . $params[0]
         ];
     }
 
