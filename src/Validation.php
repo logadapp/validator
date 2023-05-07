@@ -24,6 +24,11 @@ final class Validation
 
     private array $errorMessages = [];
 
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
     /**
      * Get the validation errors
      *
