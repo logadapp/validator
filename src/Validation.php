@@ -172,7 +172,7 @@ final class Validation
 
     private function addError(string $field, mixed $message): void
     {
-        $this->errorMessages[] = $message;
-        $this->errors[$field] = $message;
+        $this->errorMessages[] = $field . ' - ' . $message;
+        $this->errors[$field][] = $message;
     }
 }
