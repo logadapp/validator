@@ -9,6 +9,7 @@
  * @date 05 May, 2023 7:20 PM
  */
 
+declare(strict_types=1);
 
 namespace LogadApp\Validator;
 
