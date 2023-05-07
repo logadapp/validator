@@ -18,8 +18,8 @@ final class File extends Rule
     public function validate(string $field, mixed $value, array $file, array $params): array
     {
         return [
-            'status' => !empty($file['name']),
-            'message' => $field . ' -  is not a file'
+            'status' => (!empty($file['name']) && $file['error'] === UPLOAD_ERR_OK),
+            'message' => 'is not a file'
         ];
     }
 }
