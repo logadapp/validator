@@ -1,0 +1,1 @@
+{"version":1,"defects":[],"times":{"MakeValidateTest::testMake":0.027,"Rules\\EmailTest::testWithValidInput":0.025,"Rules\\EmailTest::testWithInvalidInput":0.027,"Rules\\NumericTest::testWithValidInput":0.011,"Rules\\NumericTest::testWithInvalidInput":0,"Rules\\RequiredTest::testWithValidInput":0.012,"Rules\\RequiredTest::testWithInvalidInput":0}}
