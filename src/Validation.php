@@ -14,6 +14,11 @@ use Exception;
 
 final class Validation
 {
+    /**
+     * @var string[]
+     */
+    public array $ruleSet;
+
     private array $postData;
 
     private array $files;
@@ -27,6 +32,11 @@ final class Validation
     public function getRules(): array
     {
         return $this->rules;
+    }
+
+    public function getRuleSet(): array
+    {
+        return $this->ruleSet;
     }
 
     /**
@@ -116,6 +126,8 @@ final class Validation
 
         foreach ($this->rules as $fieldName => $ruleset) {
             $ruleSets = explode('|', $ruleset);
+            $this->ruleSet = $ruleSets;
+
             foreach ($ruleSets as $rule) {
                 $this->validateRule($rule, $fieldName, $this->postData[$fieldName]??'', $this->files[$fieldName]??[]);
             }
