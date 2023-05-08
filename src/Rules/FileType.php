@@ -28,9 +28,6 @@ final class FileType extends Rule
      */
     public function validate(string $field, mixed $value, array $file, array $params): array
     {
-        /*echo 'File '. $field;
-        print_r($file);
-        echo PHP_EOL;*/
         $status = false;
         $allowedTypes = $params;
 
