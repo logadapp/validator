@@ -23,7 +23,6 @@ $rules = [
 $validator->make($_POST, $_FILES, $rules);
 
 try {
-
     $validator->validate();
 
     echo 'Is valid?', PHP_EOL;
