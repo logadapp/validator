@@ -23,4 +23,25 @@ class Rule
         $this->postData = $postData;
         $this->files = $files;
     }
+
+    final protected function callSubRule(string $ruleName, string $field, mixed $value, array $file, array $params)
+    {
+        $className = 'LogadApp\Validator\Rules\\' . $ruleName;
+        if (class_exists($className)) {
+            $subRule = new $ruleName([], []);
+            $result = $subRule->validate($field, $value, $file, [
+                $params[0],
+                $params[1]
+            ]);
+            return [
+                'status' => $result['status'],
+                'message' => $result['message']
+            ];
+        }
+
+        return [
+            'status' => false,
+            'message' => 'Invalid sub rule'
+        ];
+    }
 }
