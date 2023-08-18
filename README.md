@@ -1,3 +1,6 @@
+# Under development!
+
+
 <br />
 <div align="center">
 
@@ -84,6 +87,3 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch
 5. Open a Pull Request
 6.
-
-# Under development!
-Repo was made public for interested parties to see the progress
