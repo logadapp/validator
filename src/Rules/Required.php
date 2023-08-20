@@ -15,7 +15,7 @@ use LogadApp\Validator\Rule;
 
 final class Required extends Rule
 {
-    public function validate(string $field, string $value): array
+    public function validate(string $field, string $value, array $file): array
     {
         return [
             'status' => !(empty($file['name']) && empty($value)),

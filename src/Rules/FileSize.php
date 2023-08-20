@@ -17,23 +17,22 @@ final class FileSize extends Rule
 {
     public function validate(string $field, mixed $value, array $file, array $params): array
     {
-        $minSize = $this->parseSize($params[0]);
         $maxSize = $this->parseSize($params[1]);
+        $minSize = $this->parseSize($params[0]);
 
-        echo 'Min size: '.$minSize, PHP_EOL;
-        echo 'Max size: '.$maxSize, PHP_EOL;
+        $maxStatus = $file['size'] <= $maxSize;
+        $minStatus = $file['size'] >= $minSize;
 
-        $status = false;
-
-        if (isset($file['size'])) {
-            $status = $file['size'] <= $maxSize;
+        if (!$minStatus) {
+            return [
+                'status' => $minStatus,
+                'message' => 'Min file size is ' . $params[0]
+            ];
         }
 
-        // if ($file['size'] <= )
-
         return [
-            'status' => $status,
-            'message' => 'Max file size is ' . $params[0]
+            'status' => $maxStatus,
+            'message' => 'Max file size is ' . $params[1]
         ];
     }
 
